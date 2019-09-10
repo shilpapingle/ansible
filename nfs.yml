@@ -1,0 +1,24 @@
+---
+- name: nfs share
+  hosts: all
+  gather_facts: false
+  tasks:
+  - name: create directory
+    file:
+        path: /nfsshare
+        state: directory
+  - name: Create file
+    copy:
+         content: /nfsshare 10.76.1.180(rw,sync)
+         dest: "/etc/exports"
+  - name: start service
+    service:
+         name: nfs-server
+         state: started
+  - name: firewall setting
+    firewalld:
+         service: nfs,mountd,rpc-bind
+         permanent: true
+         immediate: true
+         state: enabled
+         
